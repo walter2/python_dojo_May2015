@@ -5,6 +5,14 @@ FLIKR_KEY = '8fe93154747a7fc720dbdeffb3831d81'
 FLIKR_ENDPOINT = 'https://api.flickr.com/services/rest/'
 FLIKR_IMAGE_KEY = 'url_t'
 
+CODE_TEMPLATE = '''
+    <div>
+        <pre>{code}</pre>
+        <img src="{image_url}"/>
+    </div>
+'''
+
+
 def clean_code(code):
     cleaned_code = []
     for line_number, line in code:
@@ -12,7 +20,7 @@ def clean_code(code):
         for word in split_code:
 
             if word.isalpha() and len(word) >= 3 and word not in keyword.kwlist:
-                cleaned_code.append((line_number, word))
+                cleaned_code.append((line, word))
     return set(cleaned_code)
 
 
@@ -22,7 +30,6 @@ def parse_code(_file):
     cleaned_code = clean_code(code)
     for keyword in cleaned_code:
         yield keyword
-
 
 
 def get_image_url(keyword):
@@ -41,6 +48,7 @@ def get_image_url(keyword):
 
 
 if __name__ == "__main__":
-    for k in parse_code('code_parser.py'):
-        image_url = get_image_url(keyword)
-        print('<div><pre>%s</pre><img src="%s"/></div>' % (code, image_url))
+    with open('temp.html', 'w') as f:
+        for code, word in parse_code('code_parser.py'):
+            image_url = get_image_url(word)
+            f.write(CODE_TEMPLATE.format(code=code, image_url=image_url))
