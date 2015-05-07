@@ -21,12 +21,12 @@ def get_image_url(keyword):
 
 
 def parse_code():
-    keywords = ['hello', 'python', 'world']
+    keywords = [('def hello():', 'hello'), ('   python =1 ', 'python'), ('   world = 2', 'world')]
     for keyword in keywords:
         yield keyword
 
 
 if __name__ == "__main__":
-    for keyword in parse_code():
+    for code, keyword in parse_code():
         image_url = get_image_url(keyword)
-        print('<div><span>%s</span><img src="%s"/></div>' % (keyword, image_url))
+        print('<div><pre>%s</pre><img src="%s"/></div>' % (code, image_url))
