@@ -34,6 +34,9 @@ def parse_code(_file):
 
 
 def get_image_url(keyword):
+    if keyword in _image_url_cache:
+        return _image_url_cache[keyword]
+
     params = {
         'api_key': FLIKR_KEY,
         'extras': FLIKR_IMAGE_KEY,
@@ -45,7 +48,10 @@ def get_image_url(keyword):
         'text': keyword}
     response = requests.get(FLIKR_ENDPOINT, params)
     url = response.json()['photos']['photo'][0][FLIKR_IMAGE_KEY]
+    _image_url_cache[keyword] = url
+
     return url
+_image_url_cache = {}
 
 
 if __name__ == "__main__":
